@@ -1,16 +1,61 @@
-# Finance
+# Backend Finance
 
-Projeto Spring Boot para uma API de finanças usando Java 21, Maven, PostgreSQL, JPA, Flyway e Spring Security.
+Backend Finance e uma API REST desenvolvida em Java com Spring Boot para gerenciamento financeiro pessoal. O projeto tem como objetivo permitir que usuarios cadastrem suas receitas, despesas e categorias, acompanhem movimentacoes financeiras e consultem informacoes organizadas por periodo.
 
-## Stack
+Além da proposta funcional, este projeto tambem serve como estudo pratico de backend profissional, aplicando conceitos como autenticacao JWT, seguranca com Spring Security, persistencia com JPA, versionamento de banco com Flyway, validacoes, arquitetura em camadas, tratamento de erros e testes automatizados.
+
+## Objetivos do projeto
+
+- Criar uma API backend robusta e bem estruturada
+- Praticar desenvolvimento com Java e Spring Boot
+- Aplicar autenticacao e autorizacao com JWT
+- Gerenciar usuarios, categorias e transacoes financeiras
+- Utilizar PostgreSQL como banco de dados
+- Versionar alteracoes no banco com Flyway
+- Evoluir o projeto com boas praticas de arquitetura, testes e documentacao
+
+## Principais funcionalidades
+
+- Cadastro de usuarios
+- Login com geracao de token JWT
+- Protecao de rotas privadas
+- Cadastro de categorias financeiras
+- Cadastro de receitas e despesas
+- Listagem de transacoes por usuario
+- Filtros por tipo, categoria e periodo
+- Paginacao de resultados
+- Tratamento padronizado de erros
+- Testes unitarios e de integracao
+
+## Tecnologias utilizadas
 
 - Java 21
 - Spring Boot 3.5.14
-- Maven Wrapper
-- PostgreSQL
-- Spring Data JPA
-- Flyway
+- Spring Web
 - Spring Security
+- Spring Data JPA
+- PostgreSQL
+- Flyway
+- JWT
+- Bean Validation
+- Lombok
+- Docker
+- JUnit
+- Mockito
+- Swagger / OpenAPI
+- Maven Wrapper
+
+## Estrutura inicial
+
+```txt
+com.seuprojeto.finance
+├── auth
+├── config
+├── common
+├── security
+├── user
+└── transaction
+```
 
 ## Uso de IA
 
