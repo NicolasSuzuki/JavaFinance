@@ -179,15 +179,11 @@ A implementacao da estrutura e das configuracoes foi conduzida manualmente pelo 
 
 ## Uso do GPT como PO, PM e Tech Lead
 
-O GPT tambem esta sendo usado como apoio para organizacao do projeto em papeis proximos aos de PO, PM e Tech Lead.
+Durante o desenvolvimento do projeto, utilizei agentes de Inteligencia Artificial simulando diferentes papeis dentro de uma equipe de produto e tecnologia: Product Manager, Product Owner e Tech Lead.
 
-Como PO, o GPT ajudou a transformar a ideia do produto em funcionalidades e objetivos claros para a API de gerenciamento financeiro.
+O agente de Product Manager auxiliou na definicao da visao do produto, escopo inicial, objetivos e evolucao do projeto. O agente de Product Owner apoiou na organizacao do backlog, criacao das sprints, detalhamento das tarefas e definicao dos criterios de aceite. Ja o agente de Tech Lead contribuiu com orientacoes tecnicas, sugestoes de arquitetura, boas praticas backend e organizacao da estrutura da aplicacao.
 
-Como PM, o GPT ajudou a organizar o trabalho em sprints, separando a evolucao do projeto em etapas progressivas e mais faceis de acompanhar.
-
-Como Tech Lead, o GPT ajudou a orientar decisoes tecnicas, como estrutura de pacotes, dependencias, configuracao de ambientes, uso de Flyway, seguranca com JWT e validacao do setup local.
-
-Esse uso foi direcionado para planejamento, organizacao, refinamento tecnico e aprendizado. A implementacao do codigo da aplicacao nao foi delegada para a IA.
+Esses agentes foram utilizados como apoio ao planejamento e a tomada de decisao, enquanto o desenvolvimento e a implementacao do projeto foram realizados manualmente.
 
 ## Organizacao das Sprints
 
@@ -207,6 +203,125 @@ Tarefas principais:
 - Implementar cadastro e login
 - Configurar autenticacao com JWT
 - Proteger rotas privadas com Spring Security
+
+Status atual: em andamento.
+
+## Acompanhamento por tasks
+
+### Task 1 - Estrutura inicial do backend
+
+Status: concluida.
+
+Objetivo:
+
+Criar a estrutura inicial do backend.
+
+Tasks tecnicas:
+
+- Criar projeto via Spring Initializr
+- Adicionar dependencias principais do Spring Boot
+- Adicionar Spring Web
+- Adicionar Spring Security
+- Adicionar Spring Data JPA
+- Adicionar PostgreSQL Driver
+- Adicionar Validation
+- Adicionar Lombok
+- Adicionar Flyway
+- Adicionar dependencias JWT
+- Configurar arquivos YAML
+- Separar environments
+- Criar estrutura inicial de pacotes
+
+Criterios de aceite:
+
+- Projeto sobe localmente
+- Build sem erros
+- Estrutura organizada
+
+Resultado:
+
+- Projeto Spring Boot criado
+- Dependencias principais configuradas no `pom.xml`
+- Dependencias JWT adicionadas
+- Configuracao migrada para YAML
+- Ambientes separados em `application.yml`, `application-dev.yml`, `application-test.yml` e `application-prod.yml`
+- Estrutura inicial criada abaixo de `com.backend.finance`
+- Aplicacao validada localmente com build/teste sem erro
+
+Observacao:
+
+A estrutura esperada pela task usava o pacote de exemplo `com.seuprojeto.finance`. No projeto real, o pacote base e `com.backend.finance`, o que esta correto tecnicamente porque todos os pacotes ficam abaixo da classe principal `FinanceApplication`.
+
+### Task 2 - Banco local com Docker
+
+Status: em andamento.
+
+Objetivo:
+
+Subir banco local utilizando Docker.
+
+Tasks tecnicas:
+
+- Criar `docker-compose.yml`
+- Configurar PostgreSQL
+- Configurar variaveis de ambiente
+- Validar conexao com aplicacao
+
+Criterios de aceite:
+
+- Container sobe corretamente
+- Banco acessivel
+- Aplicacao conecta ao banco
+- Persistencia funcionando
+
+Plano de validacao:
+
+- subir o container PostgreSQL com Docker Compose
+- confirmar que o container esta em execucao
+- testar conexao com `psql`
+- ajustar `application-dev.yml` para apontar para o banco do container
+- executar a aplicacao ou os testes para validar conexao
+- criar ou validar uma migration Flyway para confirmar persistencia/versionamento
+
+Progresso realizado:
+
+- Criado arquivo `docker-compose.yml`
+- Configurado servico PostgreSQL com imagem `postgres:16`
+- Configurado container `finance-postgres`
+- Configurado volume Docker `postgres_data` para persistencia dos dados
+- Configurado healthcheck com `pg_isready`
+- Criado arquivo `.env.example` com variaveis de referencia
+- Ajustado `application-dev.yml` para usar variaveis de ambiente com fallback
+
+Configuracao definida:
+
+- banco: `finance`
+- usuario: `postgres`
+- senha local: `12345`
+- porta interna do container: `5432`
+- porta publicada na maquina: `5434`
+- URL JDBC em desenvolvimento: `jdbc:postgresql://localhost:5434/finance`
+
+Observacao sobre porta:
+
+Inicialmente foi tentado publicar o PostgreSQL Docker na porta `5432`, mas essa porta ja estava em uso na maquina. Para evitar conflito com outro servico local, a porta publicada do container foi alterada para `5434`.
+
+Comandos orientados para validacao manual:
+
+```bash
+docker compose up -d
+docker compose ps
+docker compose exec postgres pg_isready -U postgres -d finance
+psql -h localhost -p 5434 -U postgres -d finance
+./mvnw test
+```
+
+Status dos criterios de aceite:
+
+- Container sobe corretamente: parcialmente validado
+- Banco acessivel: pendente de validacao manual final
+- Aplicacao conecta ao banco: pendente de validacao manual final
+- Persistencia funcionando: pendente de migration ou teste de escrita
 
 ### Sprint 2 - Transactions & Categories
 
@@ -238,11 +353,14 @@ Tarefas principais:
 
 ## Estado atual
 
-- projeto configurado para usar PostgreSQL local
+- Sprint atual: Sprint 1 - Foundation & Auth
+- Task atual: Task 2 - Banco local com Docker
+- projeto configurado para usar PostgreSQL local via Docker em desenvolvimento
 - banco esperado: `finance`
 - usuario: `postgres`
 - senha em uso na configuracao local: `12345`
-- porta correta identificada: `5433`
+- porta anterior do PostgreSQL local nativo: `5433`
+- porta atual para PostgreSQL via Docker: `5434`
 - dependencias JWT adicionadas ao `pom.xml`
 - configuracao migrada para YAML
 - environments separados em arquivos dedicados
