@@ -254,7 +254,7 @@ A estrutura esperada pela task usava o pacote de exemplo `com.seuprojeto.finance
 
 ### Task 2 - Banco local com Docker
 
-Status: em andamento.
+Status: concluida.
 
 Objetivo:
 
@@ -318,10 +318,71 @@ psql -h localhost -p 5434 -U postgres -d finance
 
 Status dos criterios de aceite:
 
-- Container sobe corretamente: parcialmente validado
-- Banco acessivel: pendente de validacao manual final
-- Aplicacao conecta ao banco: pendente de validacao manual final
-- Persistencia funcionando: pendente de migration ou teste de escrita
+- Container sobe corretamente: validado
+- Banco acessivel: validado
+- Aplicacao conecta ao banco: validado
+- Persistencia funcionando: validado em conjunto com a Task 3 de migrations
+
+### Task 3 - Controle de migrations do banco
+
+Status: concluida.
+
+Objetivo:
+
+Controlar migrations do banco.
+
+Tasks tecnicas:
+
+- Configurar Flyway
+- Criar migration inicial
+- Criar tabela `users`
+- Validar execucao automatica
+
+Criterios de aceite:
+
+- Banco atualizado automaticamente
+- Historico de migrations funcionando
+- Estrutura versionada
+
+Planejamento da modelagem:
+
+Durante o planejamento inicial do projeto Backend Finance, foi realizada a definicao da estrutura principal do banco de dados e da arquitetura base da aplicacao, visando criar uma API REST organizada, escalavel e proxima de um ambiente profissional real.
+
+Nesta etapa, foi definida a separacao das principais entidades do sistema, considerando as regras de negocio necessarias para um sistema de gerenciamento financeiro pessoal. A modelagem inicial do banco foi construida utilizando as tabelas `users`, `categories` e `transactions`, permitindo que cada usuario possua suas proprias categorias e movimentacoes financeiras de forma isolada e segura.
+
+Tambem foi definido que receitas e despesas seriam representadas por uma unica entidade de transacao, diferenciadas atraves de um tipo de movimentacao (`INCOME` e `EXPENSE`). Essa abordagem reduz duplicacao de codigo, simplifica consultas e melhora a escalabilidade futura da aplicacao.
+
+Alem disso, foi utilizado apoio de Inteligencia Artificial durante a etapa de planejamento e modelagem, auxiliando na validacao da estrutura do banco de dados, definicao de relacionamentos entre entidades e identificacao de boas praticas arquiteturais. O uso da IA contribuiu para evitar omissoes importantes na modelagem inicial e para aproximar o projeto de padroes utilizados em aplicacoes backend profissionais.
+
+A estrutura inicial definida permitira futuras evolucoes do sistema, como dashboards financeiros, relatorios mensais, metas financeiras e integracoes com aplicacoes frontend ou mobile.
+
+Progresso realizado:
+
+- Flyway ja estava configurado no `pom.xml`
+- Flyway ja estava habilitado nos arquivos de configuracao
+- Pasta `src/main/resources/db/migration` definida como local padrao das migrations
+- Modelagem inicial planejada com as entidades `users`, `categories` e `transactions`
+- Criada migration inicial `V1__create_initials_tables.sql`
+- Criada tabela `users`
+- Criada tabela `categories`
+- Criada tabela `transactions`
+- Criados relacionamentos entre usuarios, categorias e transacoes
+- Criadas restricoes para tipos `INCOME` e `EXPENSE`
+- Validada execucao automatica da migration pelo Flyway
+- Validado historico de migrations com `flyway_schema_history`
+
+Resultado:
+
+- Banco atualizado automaticamente ao subir a aplicacao
+- Historico de migrations funcionando
+- Estrutura inicial do banco versionada em arquivo SQL
+- Persistencia inicial validada com PostgreSQL via Docker
+
+Status dos criterios de aceite:
+
+- Banco atualizado automaticamente: validado
+- Historico de migrations funcionando: validado
+- Estrutura versionada: validado
 
 ### Sprint 2 - Transactions & Categories
 
@@ -354,7 +415,7 @@ Tarefas principais:
 ## Estado atual
 
 - Sprint atual: Sprint 1 - Foundation & Auth
-- Task atual: Task 2 - Banco local com Docker
+- Task atual: Task 3 - Controle de migrations do banco concluida
 - projeto configurado para usar PostgreSQL local via Docker em desenvolvimento
 - banco esperado: `finance`
 - usuario: `postgres`
@@ -364,6 +425,8 @@ Tarefas principais:
 - dependencias JWT adicionadas ao `pom.xml`
 - configuracao migrada para YAML
 - environments separados em arquivos dedicados
+- migration inicial criada e aplicada com Flyway
+- tabelas iniciais criadas: `users`, `categories` e `transactions`
 - aplicacao voltou a buildar/subir normalmente
 
 ## Observacao tecnica
