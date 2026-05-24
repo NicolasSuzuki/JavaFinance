@@ -384,6 +384,66 @@ Status dos criterios de aceite:
 - Historico de migrations funcionando: validado
 - Estrutura versionada: validado
 
+### Task 4 - Dominio de usuario
+
+Status: implementada, pendente de liberacao de rota publica na camada de seguranca.
+
+Objetivo:
+
+Implementar o dominio de usuario na aplicacao.
+
+Tasks tecnicas:
+
+- Criar entidade `User`
+- Mapear entidade para a tabela `users`
+- Criar repository de usuarios
+- Criar DTO de request para criacao de usuario
+- Criar DTO de response sem exposicao de senha
+- Criar service com regra de criacao de usuario
+- Validar email duplicado
+- Criar exception especifica para email ja existente
+- Criar handler global para resposta de erro
+- Criar controller para cadastro de usuario
+
+Progresso realizado:
+
+- Criada entidade `User` em `user/entity`
+- Mapeado `id` como `UUID`
+- Mapeados campos `name`, `email`, `password`, `createdAt` e `updatedAt`
+- Criado `UserRepository` estendendo `JpaRepository<User, UUID>`
+- Criados metodos `findByEmail` e `existsByEmail`
+- Criado `CreateUserRequest` com validacoes de entrada
+- Criado `UserResponse` sem retornar senha
+- Criado `UserService` com fluxo de criacao de usuario
+- Adicionada validacao para impedir email duplicado
+- Criada exception `EmailAlreadyExistsException`
+- Criado `GlobalExceptionHandler` para retornar `409 Conflict` em caso de email duplicado
+- Criado `UserController` com endpoint `POST /users`
+
+Validacao realizada:
+
+- O endpoint `POST /users` foi testado manualmente
+- A aplicacao respondeu `401 Unauthorized`
+
+Analise do resultado:
+
+O retorno `401 Unauthorized` era esperado neste momento porque o projeto ja possui Spring Security como dependencia, mas ainda nao existe uma configuracao de seguranca liberando rotas publicas. Portanto, o bloqueio nao indica erro no dominio de usuario, e sim que a proxima etapa precisa configurar a camada de seguranca/autenticacao.
+
+Criterios de aceite sugeridos para a task:
+
+- Entidade `User` criada e mapeada: validado
+- Repository criado: validado
+- DTOs criados: validado
+- Service criado: validado
+- Controller criado: validado
+- Email duplicado tratado por exception especifica: validado em codigo
+- Senha nao exposta na resposta: validado em codigo
+- Endpoint acessivel publicamente: pendente de configuracao de seguranca
+
+Proxima acao:
+
+Configurar Spring Security para permitir acesso publico ao endpoint de cadastro ou mover o fluxo para uma rota de autenticacao, como `POST /auth/register`.
+
 ### Sprint 2 - Transactions & Categories
 
 A segunda sprint teve como objetivo implementar o nucleo financeiro da aplicacao, permitindo que o usuario organize suas receitas, despesas e categorias.
@@ -415,7 +475,7 @@ Tarefas principais:
 ## Estado atual
 
 - Sprint atual: Sprint 1 - Foundation & Auth
-- Task atual: Task 3 - Controle de migrations do banco concluida
+- Task atual: Task 4 - Dominio de usuario implementada, com bloqueio de acesso por Spring Security
 - projeto configurado para usar PostgreSQL local via Docker em desenvolvimento
 - banco esperado: `finance`
 - usuario: `postgres`
@@ -427,6 +487,9 @@ Tarefas principais:
 - environments separados em arquivos dedicados
 - migration inicial criada e aplicada com Flyway
 - tabelas iniciais criadas: `users`, `categories` e `transactions`
+- dominio inicial de usuario criado
+- endpoint `POST /users` criado
+- teste manual do endpoint retornou `401 Unauthorized` por ausencia de configuracao de rota publica no Spring Security
 - aplicacao voltou a buildar/subir normalmente
 
 ## Observacao tecnica
