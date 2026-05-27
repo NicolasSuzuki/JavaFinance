@@ -2,6 +2,7 @@ package com.backend.finance.user.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backend.finance.common.exception.EmailAlreadyExistsException;
@@ -13,9 +14,11 @@ import com.backend.finance.user.repository.UserRepository;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse create(CreateUserRequest request){
@@ -28,7 +31,7 @@ public class UserService {
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
-        user.setPassword(request.password());
+        user.setPassword(passwordEncoder.encode(request.password()));
         user.setCreatedAt(now);
         user.setUpdatedAt(now);
 

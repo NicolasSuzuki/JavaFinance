@@ -386,7 +386,7 @@ Status dos criterios de aceite:
 
 ### Task 4 - Dominio de usuario
 
-Status: implementada, pendente de liberacao de rota publica na camada de seguranca.
+Status: concluida.
 
 Objetivo:
 
@@ -404,6 +404,8 @@ Tasks tecnicas:
 - Criar exception especifica para email ja existente
 - Criar handler global para resposta de erro
 - Criar controller para cadastro de usuario
+- Configurar criptografia de senha
+- Liberar rota publica de cadastro na camada de seguranca
 
 Progresso realizado:
 
@@ -419,15 +421,26 @@ Progresso realizado:
 - Criada exception `EmailAlreadyExistsException`
 - Criado `GlobalExceptionHandler` para retornar `409 Conflict` em caso de email duplicado
 - Criado `UserController` com endpoint `POST /users`
+- Criado `SecurityConfig` no pacote `security`
+- Configurado `PasswordEncoder` com `BCryptPasswordEncoder`
+- Injetado `PasswordEncoder` no `UserService`
+- Ajustado fluxo de criacao para salvar `passwordEncoder.encode(request.password())`
+- Liberado acesso publico ao endpoint `POST /users`
 
 Validacao realizada:
 
 - O endpoint `POST /users` foi testado manualmente
-- A aplicacao respondeu `401 Unauthorized`
+- O cadastro de usuario com senha valida foi executado com sucesso
+- A senha passou a ser salva com hash, nao em texto puro
+- A resposta do cadastro nao retorna o campo `password`
+- A validacao de senha minima foi testada com senha menor que 6 caracteres
+- A aplicacao rejeitou senha invalida conforme a regra definida no DTO
 
 Analise do resultado:
 
-O retorno `401 Unauthorized` era esperado neste momento porque o projeto ja possui Spring Security como dependencia, mas ainda nao existe uma configuracao de seguranca liberando rotas publicas. Portanto, o bloqueio nao indica erro no dominio de usuario, e sim que a proxima etapa precisa configurar a camada de seguranca/autenticacao.
+O dominio de usuario foi finalizado com entidade, repository, DTOs, service, controller, validacoes e criptografia de senha. A camada de seguranca foi configurada para permitir acesso publico ao cadastro de usuario, mantendo as demais rotas protegidas.
+
+Durante os testes, senha menor que 6 caracteres foi rejeitada pela validacao definida em `CreateUserRequest`. Esse comportamento confirma a regra de senha minima. Uma melhoria futura possivel e padronizar a resposta de erros de validacao no `GlobalExceptionHandler`, para retornar um corpo de erro mais consistente.
 
 Criterios de aceite sugeridos para a task:
 
@@ -438,11 +451,14 @@ Criterios de aceite sugeridos para a task:
 - Controller criado: validado
 - Email duplicado tratado por exception especifica: validado em codigo
 - Senha nao exposta na resposta: validado em codigo
-- Endpoint acessivel publicamente: pendente de configuracao de seguranca
+- Senha minima de 6 caracteres: validado
+- Password hash obrigatorio: validado
+- Senha nao salva em texto puro: validado
+- Endpoint acessivel publicamente: validado
 
 Proxima acao:
 
-Configurar Spring Security para permitir acesso publico ao endpoint de cadastro ou mover o fluxo para uma rota de autenticacao, como `POST /auth/register`.
+Iniciar a proxima etapa da Sprint 1, relacionada ao fluxo de autenticacao/login e emissao de JWT, ou revisar a padronizacao das respostas de erro antes de avancar para autenticacao.
 
 ### Sprint 2 - Transactions & Categories
 
@@ -475,7 +491,7 @@ Tarefas principais:
 ## Estado atual
 
 - Sprint atual: Sprint 1 - Foundation & Auth
-- Task atual: Task 4 - Dominio de usuario implementada, com bloqueio de acesso por Spring Security
+- Task atual: Task 4 - Dominio de usuario concluida
 - projeto configurado para usar PostgreSQL local via Docker em desenvolvimento
 - banco esperado: `finance`
 - usuario: `postgres`
@@ -487,9 +503,11 @@ Tarefas principais:
 - environments separados em arquivos dedicados
 - migration inicial criada e aplicada com Flyway
 - tabelas iniciais criadas: `users`, `categories` e `transactions`
-- dominio inicial de usuario criado
+- dominio inicial de usuario criado e validado
 - endpoint `POST /users` criado
-- teste manual do endpoint retornou `401 Unauthorized` por ausencia de configuracao de rota publica no Spring Security
+- rota publica `POST /users` liberada na configuracao de seguranca
+- senha de usuario criptografada com BCrypt antes de salvar no banco
+- validacao de senha minima funcionando
 - aplicacao voltou a buildar/subir normalmente
 
 ## Observacao tecnica
